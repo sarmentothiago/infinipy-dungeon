@@ -1,155 +1,97 @@
-from turtle import position
 import weapons
 import tool
 import os
+import races
+import classes
 
-skeleton = {
-    "name": "Skeleton",
-    "xp": 50,
-    "hp": 13,
-    "armor class": 13,
-    "speed": [30,30],
-    "weapon": weapons.shortsword
-}
+class Player:
 
-test_char = {
-    "name": "Stranger",
-    "level": 1,
-    "xp": 0,
-    "hp": 20,
-    "armor class": 15,
-    "speed": [30,30],
-    "weapon": weapons.greatsword
-}
+    CHARACTER_XP_LEVEL_UP = [0, 300, 900, 2_700,                    #lvl 1 2 3 4
+                            6_500, 14_000, 23_000, 34_000,          #lvl 5 6 7 8
+                            48_000, 64_000, 85_000, 100_000,        #lvl 9 10 11 12
+                            120_000, 140_000, 165_000, 195_000,     #lvl 13 14 15 16
+                            225_000, 265_000, 305_000, 355_000]     #lvl 17 18 19 20
 
-char_xp = [0,300, 900, 2_700,
-        6_500, 14_000, 23_000, 34_000,
-        48_000, 64_000, 85_000, 100_000,
-        120_000, 140_000, 165_000, 195_000,
-        225_000, 265_000, 305_000, 355_000]
+    ABILITY_MODIFIERS = [-5, -4, -4, -3, -3,    #lvl 1 2 3 4 5 
+                        -2, -2, -1, -1, 0,      #lvl 6 7 8 9 10
+                        0, 1, 1, 2, 2,          #lvl 11 12 13 14 15
+                        3, 3, 4, 4, 5,          #lvl 16 17 18 19 20
+                        5, 6, 6, 7, 7,          #lvl 21 22 23 24 25
+                        8, 8, 9, 9, 10]         #lvl 26 27 28 29 30
 
-class Character:
-    def __init__(self,sheet,position=[0,0]):
-        self.name = sheet.get("name")
-        self.hp = sheet.get("hp")
-        self.armor = sheet.get("armor class")
-        self.damage = 1
-        self.weapon = weapons.Weapon(sheet.get("weapon"))
-        self.live = True
-        self.xp = sheet.get("xp")
-        self.speed = sheet.get("speed")
-        self.position = position
+    RACES = ["Hill Dwarf","Montain Dwarf","High Elf",
+            "Wood Elf","Drow Elf","Lightfoot Halfling","Stout Halfling"
+            "Human","Dragonborn","Forest Gnome","Rock Gnome",
+            "Half-Elf","Half-Orc","Tiefling"]
 
-    def roll_d20(self):
-        dice = tool.Dice([20])
-        dice.roll()
-        roll = dice.get_roll_result()
-        return roll
+    ABILITIES = ["Strength","Dexterity",
+                "Constitution","Intelligence",
+                "Wisdom","Charisma"]
 
-    def iniciative_roll(self):
-        return self.roll_d20()
+    SKILLS = ["Acrobatics","Animal Handling","Arcana",
+            "Athletics","Deception","History",
+            "Insight","Intimidation","Investigation",
+            "Medicine","Nature","Perception",
+            "Performance","Persuasion","Religion",
+            "Sleight of Hands","Stealth","Survival"]
 
-    def attack_roll(self):
-        dice = self.roll_d20()
-        if dice == 1:
-            return False
-        elif dice == 20:
-            return True
-        else:
-            return dice
+    NUMBER_OF_ABILITIES = 6
+    NUMBER_OF_SKILLS = 18
 
-    def damage_roll(self):
-        attack = self.damage + self.weapon.damage()
-        return attack
-    
-    def heal(self,healing):
-        self.hp += healing
-    
-    def take_damage(self,damage):
-        self.hp -= damage
+    def __init__(self,sheet):
+        self.sheet = sheet
+        self.set_race()
 
-    def equip_weapon(self):
-        self.weapon = 0
-    
-    def take_damage(self,damage):
-        if self.live:
-            self.hp -= damage
-            if self.hp <= 0:
-                self.live = False
-    
-    def walk(self,distance,position):
-        self.position = position
-        self.speed[1] += -distance
+    def set_race(self):
+        if self.sheet["race"] == ("Hill Dwarf" or "Montain Dwarf"):
+            subrace = self.sheet["race"]
+            self.race = classes.Dwarf(subrace)
 
-    def get_position(self):
-        return self.position
+        elif self.sheet["race"] == ("High Elf" or "Wood Elf" or "Drow Elf"):
+            subrace = self.sheet["race"]
+            self.race = classes.Dwarf(subrace)
 
-    def get_speed(self):
-        return self.speed
+        elif self.sheet["race"] == ("Lightfoot Halfling" or "Stout Halfling"):
+            subrace = self.sheet["race"]
+            self.race = classes.Halfling(subrace)
 
-    #Build possible actions menu
-    def get_actions(self,enimies_nearby):
-        if self.speed > 0:
-            pass
-        if enimies_nearby:
-            pass
+        elif self.sheet["race"] == "Human":
+            self.race = classes.Human()
 
-class Player(Character):
-    def __init__(self, sheet, position= [0,0]):
-        super().__init__(sheet, position)
-        self.name = tool.colors(self.name,"blue")
-        self.level = sheet.get("level")
+        elif self.sheet["race"] == "Dragonborn":
+            self.race = classes.Dragonborn()
 
-    def level_up(self,xp_gain):
-        self.xp += xp_gain
-        if self.xp > char_xp[self.level]:
-            self.level += 1
+        elif self.sheet["race"] == ("Forest Gnome" or "Rock Gnome"):
+            self.race = classes.Gnome(subrace)
 
-    def act(self,menu,challenge,last_attack):
+        elif self.sheet["race"] == "Half-Elf":
+            self.race = classes.HalfElf()
 
-        os.system("clear")
-        if last_attack != "":
-            print(last_attack,end="\n\n")
-        if "attack" in menu.keys(): #attack shows enemies on range 
-            print(tool.colors("[attack] ","bold"),end="")
-            print("The enemies nearby are:")
-            targets_range = menu["attack"]
-            targets = []
+        elif self.sheet["race"] == "Half-Orc":
+            self.race = classes.HalfOrc()
 
-            for enemy in range(len(targets_range)): #read valid targets
-                if targets_range[enemy][0]:
-                    targets.append([enemy,targets_range[enemy][1]])
+        elif self.sheet["race"] == "Tiefling":
+            self.race = classes.Tiefling()
 
-            challenge.show_enemies(targets) #show valid enemies target
-        
-        if "move" in menu.keys(): #move options
-            print(tool.colors("[move]","bold"),end="")
-            speed_left = menu["move"]
-            print(" Your position is",self.position,f"and can move {speed_left:,.1f} meters")
-        
-        print(tool.colors("[end turn]","bold")) #Always have "end turn" option
-        
-        action = input(tool.colors("\nPlayer action: ","bold"))
-        choice = self.choose(action)
+    def skill_check(self,skill):
+        race_bonus_score = self.race.skill_bonus.get(skill)
+        bonus_score = self.use_skill_modifier(skill)
+        return bonus_score + race_bonus_score
 
-        return [action,choice]
+    def saving_throws(self,ability):
+        race_bonus_score = self.race.abilities_bonus.get(ability)
+        bonus_score = self.use_ability_modifier(ability)
+        return bonus_score + race_bonus_score
 
-    #Player choose an action    
-    def choose(self,action):
-        if action == "move":
-            position = [None,None]
-            #print("Your position is",self.get_position(),"Choose your next position")
-            position = input(tool.colors("New position: ","bold")).split(",")
-            position = [int(i) for i in position]
-            return position
-        elif action == "attack":
-            target = int(input(tool.colors("Choose your target: ","bold")))
-            return target
-        elif action == "end turn":
-            return True
+    def update_ability(self,ability,value): #Update abilities
+        self.sheet["abilities"][ability] = value
+        return self.sheet["abilities"][ability]
 
-class Enemy(Character):
-    def __init__(self, sheet, position):
-        super().__init__(sheet, position)
-        self.name = tool.colors(self.name,"yellow")
-        
+    def use_ability_modifier(self,ability): #return ability modifier
+        value = self.sheet["abilities"][ability] -1 #because array starts in 0 and level in 1
+        return self.ABILITY_MODIFIERS[value]
+
+    def use_skill_modifier(self,skill): #return ability modifier
+        ability = self.sheet["skills"][skill]["ability"]
+        value = self.use_ability_modifier(ability)
+        return value
