@@ -37,26 +37,7 @@ skeleton = {
     "weapon": shortsword
 }
 
-test_char = {
-    "name": "Stranger",
-    "level": 1,
-    "xp": 0,
-    "hp": 20,
-    "armor class": 15,
-    "speed": [30,30],
-    "weapon": greatsword
-}
-
 ABILITIES_LIST = {
-    "Strength": 0,
-    "Dexterity": 0,
-    "Constitution": 0,
-    "Intelligence": 0,
-    "Wisdom": 0,
-    "Charisma": 0
-}
-
-ability_test = {
     "Strength": 0,
     "Dexterity": 0,
     "Constitution": 0,
@@ -122,7 +103,7 @@ test_char_complete = {
     "xp": 0,
     "race": "Human",
     "class": "Fighter",
-    "abilities": ability_test,
+    "abilities": ABILITIES_LIST,
     "skills": skills_test,
     "hp": 0,
     "armor class": 0,
