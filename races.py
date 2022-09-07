@@ -231,14 +231,27 @@ class Gnome(Race):
                                     ["Saving throws","Wisdom","Magic"],
                                     ["Saving throws","Charisma","Magic"]]
         
+        self.artisan_tools = []
+        self.cantrip = []
+
         if subrace == "Forest Gnome":
             self.abilities_bonus =  models.GNOME_FOREST_SUBRACE_ABILITY_BONUS
             self.cantrip += ["Minor Ilusion"]
-            self.language += ["Simple", "Animal Communication"]
+            self.language += ["Simple Animal Communication"]
         elif subrace == "Rock Gnome":
             self.abilities_bonus =  models.GNOME_ROCK_SUBRACE_ABILITY_BONUS
             self.artisan_tools += ["Tinker's Tools"]
         self.language +=            models.GNOME_LANGUAGE
+
+    def set_race(self,character):
+        character.sheet["abilities score bonus"] = self.abilities_bonus
+        character.sheet["size"] = self.size            
+        character.sheet["speed"] = self.speed
+        character.sheet["vision"] = self.vision
+        character.sheet["advantage"] = self.advantage
+        character.sheet["artisan tools"] = self.artisan_tools
+        character.sheet["cantrip"] = self.cantrip
+        character.sheet["language"] = self.language
 
 class HalfElf(Race):
     def __init__(self):
