@@ -102,6 +102,8 @@ class Elf(Race):
         self.advantage =            ["Charmed"]
         self.imunity +=             [["Sleep","Magic"]]
         self.language +=            ["Elvish"]
+        self.cantrip = []
+        self.disadvantage = []
         
         if subrace == "High Elf":
             self.abilities_bonus =  {
@@ -115,12 +117,37 @@ class Elf(Race):
                                         "Wisdom":       1
                                     }
             self.proficiency +=     ["Longsword","Shortsword","Shortbow","Longbow"]
+            self.speed = 35
+            self.hide = ["Mask of the Wild"]
         elif subrace == "Drow Elf":
             self.abilities_bonus =  {
                                         "Dexterity":    2,
                                         "Charisma":     1
                                     }
+            self.vision = {
+                                        "Bright light": 60,
+                                        "Dim light":    120,
+                                        "Darkness":     120
+                                    }
+            self.disadvantage +=    [["Attack rolls","Direct Sunlight"],
+                                    ["Perception","Direct Sunlight"]]
             self.proficiency +=     ["Rapiers","Shortswords","Hand crossbows"]
+
+    def set_race(self,character, new_language = [], cantrip = []):
+        character.sheet["abilities score bonus"] = self.abilities_bonus
+        character.sheet["size"] = self.size
+        character.sheet["speed"] = self.speed
+        character.sheet["language"] += [new_language]
+        character.sheet["cantrip"] += [cantrip]
+        character.sheet["hide"] += self.hide
+
+    def level_up(self, character, level):
+        if character.sheet["race"] == "Drow Elf":
+            if level == 3:
+                character.sheet["spells"] += ["Faerie Fire"]
+            elif level == 5:
+                character.sheet["spells"] += ["Darkness"]
+
 
 class Halfling(Race):
     def __init__(self,subrace):
@@ -168,7 +195,7 @@ class Human(Race):
     def set_race(self,character,new_language):
         character.sheet["abilities score bonus"] = self.abilities_bonus
         character.sheet["size"] = self.size
-        character.sheet["speed"] = 30
+        character.sheet["speed"] = self.speed
         character.sheet["language"] += [new_language]
 
 class Dragonborn(Race):
