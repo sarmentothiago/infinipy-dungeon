@@ -1,0 +1,20 @@
+{
+    "Human": {
+        "Score bonus":  {
+                            "Strength":     1,
+                            "Dexterity":    1,
+                            "Constitution": 1,
+                            "Intelligence": 1,
+                            "Wisdom":       1,
+                            "Charisma":     1
+        },
+        "Size": "Medium",
+        "Speed": 30,
+        "Vision":   {
+                        "Bright light": 60,
+                        "Dim light": 30,
+                        "Darkness": 0
+        },
+        "Language": "Common"
+    }
+}

@@ -1,0 +1,46 @@
+{
+    "Hill Dwarf": {
+                    "Score bonus": {
+                                        "Strength":     0,
+                                        "Dexterity":    0,
+                                        "Constitution": 2,
+                                        "Intelligence": 0,
+                                        "Wisdom":       1,
+                                        "Charisma":     0
+                    },
+                    "Size": "Medium",
+                    "Speed": 25,
+                    "Vision": {
+                                    "Bright light": 60,
+                                    "Dim light":    60,
+                                    "Darkness":     60
+                    },
+                    "Advantage": ["Poison"],
+                    "Resistance": ["Poison"],
+                    "Proficiency": ["Battleaxe","Handaxe","Light hammer","Warhammer"],
+                    "HP bonus": 1,
+                    "Language": ["Common","Dwarvish"]
+    },
+    "Montain Dwarf": {
+                        "Score bonus": {
+                                            "Strength":     2,
+                                            "Dexterity":    0,
+                                            "Constitution": 2,
+                                            "Intelligence": 0,
+                                            "Wisdom":       0,
+                                            "Charisma":     0   
+                        },
+                        "Size": "Medium",
+                        "Speed": 25,
+                        "Vision": {
+                                    "Bright light": 60,
+                                    "Dim light":    60,
+                                    "Darkness":     60
+                        },
+                        "Advantage": ["Poison"],
+                        "Resistance": ["Poison"],
+                        "Proficiency": ["Battleaxe","Handaxe","Light hammer","Warhammer","Light armor","Medium armor"],
+                        "Language": ["Common","Dwarvish"]
+
+    }
+}
