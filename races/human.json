@@ -15,6 +15,6 @@
                         "Dim light": 30,
                         "Darkness": 0
         },
-        "Language": "Common"
+        "Language": ["Common"]
     }
 }
